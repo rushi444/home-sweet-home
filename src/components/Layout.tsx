@@ -1,14 +1,16 @@
 import { FC, ReactNode } from 'react'
+import { Box, Flex, Image, Text, Button } from '@chakra-ui/react'
 import Link from 'next/link'
-import { Box, Flex, Image, Text } from '@chakra-ui/react'
+
+import { useAuth } from 'src/lib/auth/useAuth'
 
 type Props = {
   children: ReactNode
 }
 
 export const Layout: FC<Props> = ({ children }) => {
-  const authenticated = false
-  const logout = () => null
+  const { authenticated, logout } = useAuth()
+  
   return (
     <Box bg="gray.900" mx="auto" maxW="42rem" display="inline">
       <Box as="nav" bg="gray.800" h="64px">
@@ -23,11 +25,11 @@ export const Layout: FC<Props> = ({ children }) => {
               <Link href="/houses/add">
                 <Text as="a">Add House</Text>
               </Link>
-              <button onClick={logout}>Logout</button>
+              <Button onClick={logout}>Logout</Button>
             </>
           ) : (
             <Link href="/auth">
-              <a>Login / Signup</a>
+              <Text as="a">Login / Signup</Text>
             </Link>
           )}
         </Flex>
