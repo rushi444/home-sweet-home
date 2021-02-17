@@ -23,7 +23,8 @@
     "nexus": "^1.0.0",
     "nexus-plugin-prisma": "^0.30.0",
     "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react-dom": "17.0.1",
+    "react-firebaseui": "^4.1.0"
   },
   "devDependencies": {
     "@prisma/cli": "^2.16.1",

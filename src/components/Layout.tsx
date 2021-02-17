@@ -10,7 +10,7 @@ type Props = {
 
 export const Layout: FC<Props> = ({ children }) => {
   const { authenticated, logout } = useAuth()
-  
+
   return (
     <Box bg="gray.900" mx="auto" maxW="42rem" display="inline">
       <Box as="nav" bg="gray.800" h="64px">
@@ -25,7 +25,13 @@ export const Layout: FC<Props> = ({ children }) => {
               <Link href="/houses/add">
                 <Text as="a">Add House</Text>
               </Link>
-              <Button onClick={logout}>Logout</Button>
+              <Button
+                onClick={logout}
+                variant="ghost"
+                _hover={{ backgroundColor: 'black' }}
+              >
+                Logout
+              </Button>
             </>
           ) : (
             <Link href="/auth">

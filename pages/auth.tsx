@@ -1,5 +1,12 @@
+import { FirebaseAuth } from 'src/components/FirebaseAuth'
+import { Layout } from 'src/components/Layout'
+
 const Auth = () => {
-  return <div>Auth</div>
+  return (
+    <Layout>
+      <FirebaseAuth />
+    </Layout>
+  )
 }
 
 export default Auth
