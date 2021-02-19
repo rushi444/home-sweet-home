@@ -1,7 +1,7 @@
 import { Box, Flex } from '@chakra-ui/react'
-import { MapBox } from 'src/components/Home/MapBox'
+import { MapBox } from 'src/containers/Home/MapBox'
 import { Layout } from 'src/components/Layout'
-import { HouseList } from 'src/components/Home/HouseList'
+import { HouseList } from 'src/containers/Home/HouseList'
 
 const Home = () => {
   return (
