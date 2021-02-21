@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from 'react'
-import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import Link from 'next/link'
 

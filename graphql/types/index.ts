@@ -1,1 +1,1 @@
-export default {}
+export { UserType } from './User'

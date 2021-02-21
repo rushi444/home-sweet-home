@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "generate:nexus": "ts-node --transpily-only graphql/schema",
+    "generate:nexus": "ts-node --transpile-only -P nexus.tsconfig.json graphql/schema",
     "generate:prisma": "prisma generate"
   },
   "dependencies": {
@@ -40,6 +40,7 @@
     "@types/react": "^17.0.2",
     "@types/react-map-gl": "^5.2.9",
     "ts-node": "^9.1.1",
+    "ts-node-dev": "^1.1.1",
     "typescript": "^4.1.5"
   }
 }

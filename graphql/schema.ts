@@ -1,13 +1,14 @@
 import { makeSchema } from 'nexus'
 import { nexusSchemaPrisma } from 'nexus-plugin-prisma/schema'
 import { join } from 'path'
-import * as allTypes from '../graphql/types'
+import * as allTypes from './types'
 
 import { Context } from './context'
 
 const nexusPrisma = nexusSchemaPrisma({
   experimentalCRUD: true,
   paginationStrategy: 'prisma',
+  shouldGenerateArtifacts: true,
   prismaClient: (ctx: Context) => ctx.prisma
 })
 
