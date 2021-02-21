@@ -1,8 +1,10 @@
 import { FC, useState, useEffect } from 'react'
-import { Box, FormLabel, Heading, Text } from '@chakra-ui/react'
+import { Box, Button, Heading } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 
 import { SearchBox } from './SearchBox'
+import { ImageUpload } from './ImageUpload'
+import { HouseDetails } from './HouseDetails'
 
 type Props = {}
 
@@ -10,7 +12,7 @@ export const AddHome: FC<Props> = () => {
   const [submitting, setSubmitting] = useState(false)
 
   const { register, handleSubmit, setValue, errors, watch } = useForm<FormData>(
-    { defaultValues: {} }
+    { mode: 'onChange', defaultValues: {} }
   )
 
   const address = watch('address')
@@ -31,6 +33,7 @@ export const AddHome: FC<Props> = () => {
     register({ name: 'latitude' }, { required: true, min: -90, max: 90 })
     register({ name: 'longitude' }, { required: true, min: -180, max: 180 })
   }, [register])
+
   return (
     <Box
       as="form"
@@ -42,16 +45,17 @@ export const AddHome: FC<Props> = () => {
       <Heading as="h1" fontFamily="">
         Add a New House
       </Heading>
-      <Box mt="1rem">
-        <FormLabel htmlFor="search" display="block">
-          Search for your address
-        </FormLabel>
-        <SearchBox onSelectAddress={onSelectAddress} defaultValue="" />
-        <Text>{errors?.address?.message}</Text>
-        <Heading as="h2" size="md" mt=".5rem" fontFamily="">
-          {address}
-        </Heading>
-      </Box>
+      <SearchBox
+        onSelectAddress={onSelectAddress}
+        defaultValue=""
+        error={errors?.address?.message}
+        address={address}
+      />
+      <ImageUpload error={errors?.image?.message} register={register} />
+      <HouseDetails error={errors?.bedrooms?.message} register={register} />
+      <Button type="submit" disabled={submitting} mt="1rem" colorScheme="blue">
+        Add Listing
+      </Button>
     </Box>
   )
 }
