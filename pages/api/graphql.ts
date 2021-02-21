@@ -1,22 +1,20 @@
-import { ApolloServer } from 'apollo-server-lambda'
+import 'reflect-metadata'
+import { ApolloServer } from 'apollo-server-micro'
 
-import { schema } from '../../graphql/schema'
-import { createContext } from '../../graphql/context'
+import { createContext } from 'src/graphql/context'
+import { schema } from 'src/graphql/schema'
 
 const server = new ApolloServer({
   schema,
-  context: ({ event, context }) => ({
-    headers: event.headers,
-    functionName: context.functionName,
-    event,
-    ...createContext()
-  }),
-  introspection: true
+  context: createContext
 })
 
-export const handler = server.createHandler({
-  cors: {
-    origin: '*',
-    credentials: true
+const handler = server.createHandler({ path: '/api/graphql' })
+
+export const config = {
+  api: {
+    bodyParser: false
   }
-})
+}
+
+export default handler
