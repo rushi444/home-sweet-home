@@ -17,14 +17,12 @@ type Props = {
   onSelectAddress: (input: TAddress) => void
   defaultValue: string
   error: string | undefined
-  address: string
 }
 
 export const SearchBox: FC<Props> = ({
   onSelectAddress,
   defaultValue,
   error = '',
-  address
 }) => {
   const { isLoaded, loadError } = useGoogleMapsScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY ?? '',
@@ -45,9 +43,6 @@ export const SearchBox: FC<Props> = ({
           defaultValue={defaultValue}
         />
         <FormErrorMessage>{error}</FormErrorMessage>
-        <Heading as="h2" size="md" mt=".5rem" fontFamily="">
-          {address}
-        </Heading>
       </FormControl>
     </Box>
   )

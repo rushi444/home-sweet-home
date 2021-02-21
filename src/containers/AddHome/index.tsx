@@ -50,23 +50,26 @@ export const AddHome: FC<Props> = () => {
         onSelectAddress={onSelectAddress}
         defaultValue=""
         error={errors?.address?.message}
-        address={address}
       />
-      <ImageUpload error={errors?.image?.message} register={register} />
-      <HouseDetails error={errors?.bedrooms?.message} register={register} />
-      <Flex>
-        <Button
-          type="submit"
-          disabled={submitting}
-          mt="1rem"
-          colorScheme="blue"
-        >
-          Add Listing
-        </Button>
-        <Button mt="1rem" variant="link" color="white" ml="1rem">
-          <Link href="/">Cancel</Link>
-        </Button>
-      </Flex>
+      {address?.length && (
+        <>
+          <ImageUpload error={errors?.image?.message} register={register} />
+          <HouseDetails error={errors?.bedrooms?.message} register={register} />
+          <Flex>
+            <Button
+              type="submit"
+              disabled={submitting}
+              mt="1rem"
+              colorScheme="blue"
+            >
+              Add Listing
+            </Button>
+            <Button mt="1rem" variant="link" color="white" ml="1rem">
+              <Link href="/">Cancel</Link>
+            </Button>
+          </Flex>
+        </>
+      )}
     </Box>
   )
 }
