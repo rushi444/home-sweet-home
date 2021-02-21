@@ -1,14 +1,8 @@
 import { FC, useState, useEffect } from 'react'
-import { Box, FormLabel, Heading } from '@chakra-ui/react'
+import { Box, FormLabel, Heading, Text } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 
-type FormData = {
-  address: string
-  latitude: number
-  longitude: number
-  bedrooms: string
-  image: FileList
-}
+import { SearchBox } from './SearchBox'
 
 type Props = {}
 
@@ -19,9 +13,17 @@ export const AddHome: FC<Props> = () => {
     { defaultValues: {} }
   )
 
+  const address = watch('address')
+
   const onSubmit = (data: FormData) => {
     setSubmitting(true)
     // handle create
+  }
+
+  const onSelectAddress = ({ address, latitude, longitude }: TAddress) => {
+    setValue('address', address)
+    setValue('latitude', latitude)
+    setValue('longitude', longitude)
   }
 
   useEffect(() => {
@@ -44,8 +46,22 @@ export const AddHome: FC<Props> = () => {
         <FormLabel htmlFor="search" display="block">
           Search for your address
         </FormLabel>
+        <SearchBox onSelectAddress={onSelectAddress} defaultValue="" />
+        <Text>{errors?.address?.message}</Text>
+        <Heading as="h2" size="md" mt=".5rem" fontFamily="">
+          {address}
+        </Heading>
       </Box>
     </Box>
   )
 }
-// young based god
+
+type FormData = {
+  address: string
+  latitude: number | null
+  longitude: number | null
+  bedrooms: string
+  image: FileList
+}
+
+export type TAddress = Pick<FormData, 'address' | 'latitude' | 'longitude'>
