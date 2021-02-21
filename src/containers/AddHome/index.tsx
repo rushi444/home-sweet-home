@@ -1,6 +1,7 @@
 import { FC, useState, useEffect } from 'react'
-import { Box, Button, Heading } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
+import Link from 'next/link'
 
 import { SearchBox } from './SearchBox'
 import { ImageUpload } from './ImageUpload'
@@ -53,9 +54,19 @@ export const AddHome: FC<Props> = () => {
       />
       <ImageUpload error={errors?.image?.message} register={register} />
       <HouseDetails error={errors?.bedrooms?.message} register={register} />
-      <Button type="submit" disabled={submitting} mt="1rem" colorScheme="blue">
-        Add Listing
-      </Button>
+      <Flex>
+        <Button
+          type="submit"
+          disabled={submitting}
+          mt="1rem"
+          colorScheme="blue"
+        >
+          Add Listing
+        </Button>
+        <Button mt="1rem" variant="link" color="white" ml="1rem">
+          <Link href="/">Cancel</Link>
+        </Button>
+      </Flex>
     </Box>
   )
 }
