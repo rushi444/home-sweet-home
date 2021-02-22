@@ -1,16 +1,23 @@
 import { FC, useState, useEffect } from 'react'
 import { Box, Button, Flex, Heading } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
+import { useMutation } from '@apollo/client'
 import Link from 'next/link'
 
 import { SearchBox } from './SearchBox'
 import { ImageUpload } from './ImageUpload'
 import { HouseDetails } from './HouseDetails'
+import { CreateSignatureMutation } from 'src/generated/CreateSignatureMutation'
+import { SIGNATURE_MUTATION } from 'src/lib/gql'
+import { uploadImage } from './UploadImageHelper'
 
 type Props = {}
 
 export const AddHome: FC<Props> = () => {
   const [submitting, setSubmitting] = useState(false)
+  const [createSignature] = useMutation<CreateSignatureMutation>(
+    SIGNATURE_MUTATION
+  )
 
   const { register, handleSubmit, setValue, errors, watch } = useForm<FormData>(
     { mode: 'onChange', defaultValues: {} }
@@ -18,9 +25,17 @@ export const AddHome: FC<Props> = () => {
 
   const address = watch('address')
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
     setSubmitting(true)
-    // handle create
+    const { data: signatureData } = await createSignature()
+    if (signatureData) {
+      const { signature, timestamp } = signatureData.createImageSignature
+      const imageData = await uploadImage({
+        image: data.image[0],
+        signature,
+        timestamp
+      })
+    }
   }
 
   const onSelectAddress = ({ address, latitude, longitude }: TAddress) => {
