@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Box, Flex } from '@chakra-ui/react'
 import { useDebounce } from 'use-debounce'
 import { useQuery } from '@apollo/client'
@@ -24,6 +25,7 @@ const parseBounds = ({ boundsString }: { boundsString: string }) => {
 type BoundsArray = [[number, number], [number, number]]
 
 const Home = () => {
+  const [highlightedId, setHighlightedId] = useState<string | null>(null)
   // need string for local storage and useDebounce shallow compare
   const [dataBounds, setDataBounds] = useLocalState<string>(
     'bounds',
@@ -54,8 +56,12 @@ const Home = () => {
   return (
     <Layout>
       <Flex>
-        <HouseList houses={lastData?.housesInRange || []}/>
-        <MapBox setDataBounds={setDataBounds} houses={lastData?.housesInRange || []}/>
+        <HouseList houses={lastData?.housesInRange || []} setHighlightedId={setHighlightedId}/>
+        <MapBox
+          setDataBounds={setDataBounds}
+          houses={lastData?.housesInRange || []}
+          highlightedId={highlightedId}
+        />
       </Flex>
     </Layout>
   )

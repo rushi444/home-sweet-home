@@ -10,6 +10,7 @@ import { SHOW_HOUSE_QUERY } from 'src/lib/gql'
 import { Layout } from 'src/components/Layout'
 import { Box, Heading, Text } from '@chakra-ui/react'
 import { SingleMap } from './SingleMap'
+import { HouseNav } from './HouseNav'
 
 type Props = {
   id: string
@@ -41,6 +42,7 @@ export const HouseData: FC<Props> = ({ id }) => {
     <Layout>
       <Box display={{ base: 'block', md: 'flex' }}>
         <Box width={{ base: 'full', md: '50%' }} p="1rem">
+          <HouseNav house={{id: house?.id, userId: house?.userId}}/>
           <Heading as="h1" size="2xl" my=".5rem" fontFamily="">
             {house?.address}
           </Heading>

@@ -5,13 +5,15 @@ import ReactMapGL, { Marker, Popup, ViewState } from 'react-map-gl'
 import { useLocalState } from 'src/lib/useLocalState'
 import { HousesInRange_housesInRange } from 'src/generated/HousesInRange'
 import Link from 'next/link'
+import { SearchBox } from '../AddHome/SearchBox'
 
 type Props = {
   setDataBounds: (bounds: string) => void
   houses: HousesInRange_housesInRange[]
+  highlightedId: string | null
 }
 
-export const MapBox: FC<Props> = ({ setDataBounds, houses }) => {
+export const MapBox: FC<Props> = ({ setDataBounds, houses, highlightedId }) => {
   const [selected, setSelected] = useState<HousesInRange_housesInRange | null>(
     null
   )
@@ -52,6 +54,27 @@ export const MapBox: FC<Props> = ({ setDataBounds, houses }) => {
             }
           }}
         >
+          <Box pos="absolute" top="0" w="full" zIndex="10" p="1rem">
+            <SearchBox
+              defaultValue=""
+              displayLabel={false}
+              onSelectAddress={({ address, latitude, longitude }) => {
+                if (latitude && longitude) {
+                  setViewPort(old => ({
+                    ...old,
+                    latitude,
+                    longitude,
+                    zoom: 12
+                  }))
+                  if (mapRef.current) {
+                    const bounds = mapRef.current.getMap().getBounds()
+                    setDataBounds(JSON.stringify(bounds.toArray()))
+                  }
+                }
+              }}
+            />
+          </Box>
+
           {Children.toArray(
             houses.map(house => (
               <Marker
@@ -65,7 +88,15 @@ export const MapBox: FC<Props> = ({ setDataBounds, houses }) => {
                   type="button"
                   onClick={() => setSelected(house)}
                 >
-                  <Image src="/home-solid.svg" alt="house icon" w="2rem" />
+                  <Image
+                    src={
+                      highlightedId === house.id
+                        ? '/home-color.svg'
+                        : '/home-solid.svg'
+                    }
+                    w="2rem"
+                    zIndex={highlightedId === house.id ? '1' : 'initial'}
+                  />
                 </button>
               </Marker>
             ))
@@ -100,7 +131,9 @@ export const MapBox: FC<Props> = ({ setDataBounds, houses }) => {
                   gravity="auto"
                 />
                 <Link href={`/houses/${selected.id}`}>
-                  <Button variant='link' pt='.5rem'>View</Button>
+                  <Button variant="link" pt=".5rem">
+                    View
+                  </Button>
                 </Link>
               </Box>
             </Popup>

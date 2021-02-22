@@ -16,13 +16,15 @@ const libraries: Libraries = ['places']
 type Props = {
   onSelectAddress: (input: TAddress) => void
   defaultValue: string
-  error: string | undefined
+  error?: string | undefined
+  displayLabel?: boolean
 }
 
 export const SearchBox: FC<Props> = ({
   onSelectAddress,
   defaultValue,
   error = '',
+  displayLabel = true
 }) => {
   const { isLoaded, loadError } = useGoogleMapsScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY ?? '',
@@ -35,7 +37,7 @@ export const SearchBox: FC<Props> = ({
   return (
     <Box mt="1rem">
       <FormControl isInvalid={!!error}>
-        <FormLabel htmlFor="search" display="block">
+        <FormLabel display={displayLabel ? 'block' : 'none'} htmlFor="search">
           Search for your address
         </FormLabel>
         <ReadySearchBox
