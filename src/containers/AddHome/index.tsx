@@ -71,14 +71,11 @@ export const AddHome: FC<Props> = ({ house }) => {
   const onSubmit = async (data: FormData) => {
     setSubmitting(true)
     if (!!house) {
-      console.log('updating')
       await handleUpdate(house, data)
     } else {
-      console.log('adding')
       await handleCreate(data)
     }
     setSubmitting(false)
-    console.log('Successful')
   }
 
   const handleCreate = async (data: FormData) => {

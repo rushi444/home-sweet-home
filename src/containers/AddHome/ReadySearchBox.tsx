@@ -33,8 +33,6 @@ export const ReadySearchBox: FC<Props> = ({
     clearSuggestions
   } = usePlacesAutoComplete({ debounce: 300, defaultValue })
 
-  console.log({ status, data })
-
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
     if (e.target.value === '') {
