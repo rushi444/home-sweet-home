@@ -145,4 +145,25 @@ export class HouseResolver {
       take: 50
     })
   }
+
+  @Mutation(_returns => House, { nullable: true })
+  async updateHouse(
+    @Arg('id') id: string,
+    @Arg('input') input: HouseInput,
+    @Ctx() ctx: AuthorizedContext
+  ) {
+    const house = await ctx.prisma.house.findFirst({ where: { id } })
+    if (!house) return null
+
+    return await ctx.prisma.house.update({
+      where: { id },
+      data: {
+        image: input.image,
+        address: input.address,
+        latitude: input.coordinates.latitude,
+        longitude: input.coordinates.longitude,
+        bedrooms: input.bedrooms
+      }
+    })
+  }
 }

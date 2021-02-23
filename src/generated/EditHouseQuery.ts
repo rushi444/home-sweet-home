@@ -3,26 +3,26 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { BoundsInput } from "./globalTypes";
-
 // ====================================================
-// GraphQL query operation: HousesInRange
+// GraphQL query operation: EditHouseQuery
 // ====================================================
 
-export interface HousesInRange_housesInRange {
+export interface EditHouseQuery_getHouseById {
   __typename: "House";
   id: string;
-  latitude: number;
-  longitude: number;
+  userId: string;
   address: string;
+  image: string;
   publicId: string;
   bedrooms: number;
+  latitude: number;
+  longitude: number;
 }
 
-export interface HousesInRange {
-  housesInRange: HousesInRange_housesInRange[];
+export interface EditHouseQuery {
+  getHouseById: EditHouseQuery_getHouseById | null;
 }
 
-export interface HousesInRangeVariables {
-  bounds: BoundsInput;
+export interface EditHouseQueryVariables {
+  id: string;
 }

@@ -9,16 +9,34 @@ import { SearchBox } from './SearchBox'
 import { ImageUpload } from './ImageUpload'
 import { HouseDetails } from './HouseDetails'
 import { CreateSignatureMutation } from 'src/generated/CreateSignatureMutation'
-import { CREATE_HOUSE_MUTATION, SIGNATURE_MUTATION } from 'src/lib/gql'
+import {
+  CREATE_HOUSE_MUTATION,
+  SIGNATURE_MUTATION,
+  UPDATE_HOUSE_MUTATION
+} from 'src/lib/gql'
 import { uploadImage } from './UploadImageHelper'
 import {
   CreateHouseMutation,
   CreateHouseMutationVariables
 } from 'src/generated/CreateHouseMutation'
+import {
+  updateHouseVariables,
+  updateHouse as updateHouseT
+} from 'src/generated/updateHouse'
 
-type Props = {}
+type Props = {
+  house?: {
+    id: string
+    address: string
+    latitude: number
+    longitude: number
+    bedrooms: number
+    image: string
+    publicId: string
+  } | null
+}
 
-export const AddHome: FC<Props> = () => {
+export const AddHome: FC<Props> = ({ house }) => {
   const router = useRouter()
   const [submitting, setSubmitting] = useState(false)
   const [createSignature] = useMutation<CreateSignatureMutation>(
@@ -29,14 +47,41 @@ export const AddHome: FC<Props> = () => {
     CreateHouseMutationVariables
   >(CREATE_HOUSE_MUTATION)
 
+  const [updateHouse, { error }] = useMutation<
+    updateHouseT,
+    updateHouseVariables
+  >(UPDATE_HOUSE_MUTATION)
+
   const { register, handleSubmit, setValue, errors, watch } = useForm<FormData>(
-    { mode: 'onChange', defaultValues: {} }
+    {
+      mode: 'onChange',
+      defaultValues: house
+        ? {
+            address: house.address,
+            latitude: house.latitude,
+            longitude: house.longitude,
+            bedrooms: house.bedrooms.toString()
+          }
+        : {}
+    }
   )
 
   const address = watch('address')
 
   const onSubmit = async (data: FormData) => {
     setSubmitting(true)
+    if (!!house) {
+      console.log('updating')
+      await handleUpdate(house, data)
+    } else {
+      console.log('adding')
+      await handleCreate(data)
+    }
+    setSubmitting(false)
+    console.log('Successful')
+  }
+
+  const handleCreate = async (data: FormData) => {
     const { data: signatureData } = await createSignature()
     if (signatureData) {
       const { signature, timestamp } = signatureData.createImageSignature
@@ -66,6 +111,41 @@ export const AddHome: FC<Props> = () => {
     }
   }
 
+  const handleUpdate = async (currentHouse: typeof house, data: FormData) => {
+    let image = currentHouse?.image
+
+    if (data.image[0]) {
+      const { data: signatureData } = await createSignature()
+      if (signatureData) {
+        const { signature, timestamp } = signatureData.createImageSignature
+        const imageData = await uploadImage({
+          image: data.image[0],
+          signature,
+          timestamp
+        })
+        image = imageData.secure_url
+      }
+    }
+
+    const { data: houseData } = await updateHouse({
+      variables: {
+        id: currentHouse?.id || '',
+        input: {
+          address: data.address,
+          image: image || '',
+          coordinates: {
+            latitude: data.latitude || 0,
+            longitude: data.longitude || 0
+          },
+          bedrooms: +data.bedrooms
+        }
+      }
+    })
+
+    if (houseData?.updateHouse) {
+      router.push(`/houses/${house?.id}`)
+    }
+  }
   const onSelectAddress = ({ address, latitude, longitude }: TAddress) => {
     setValue('address', address)
     setValue('latitude', latitude)
@@ -87,16 +167,20 @@ export const AddHome: FC<Props> = () => {
       py="1rem"
     >
       <Heading as="h1" fontFamily="">
-        Add a New House
+        {house ? `Editing ${house.address}` : 'Add a New House'}
       </Heading>
       <SearchBox
         onSelectAddress={onSelectAddress}
-        defaultValue=""
+        defaultValue={house ? house.address : ''}
         error={errors?.address?.message}
       />
       {address?.length && (
         <>
-          <ImageUpload error={errors?.image?.message} register={register} />
+          <ImageUpload
+            error={errors?.image?.message}
+            register={register}
+            house={house}
+          />
           <HouseDetails error={errors?.bedrooms?.message} register={register} />
           <Flex>
             <Button
@@ -105,7 +189,7 @@ export const AddHome: FC<Props> = () => {
               mt="1rem"
               colorScheme="blue"
             >
-              Add Listing
+              {house ? 'Edit Listing' : 'Add Listing'}
             </Button>
             <Button mt="1rem" variant="link" color="white" ml="1rem">
               <Link href="/">Cancel</Link>

@@ -44,6 +44,7 @@ const Home = () => {
   const lastData = useLastData(data)
 
   if (error) {
+    console.log({error})
     return (
       <Layout>
         <Box>Error loading page...</Box>

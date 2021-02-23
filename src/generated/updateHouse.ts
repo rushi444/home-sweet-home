@@ -3,26 +3,28 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { BoundsInput } from "./globalTypes";
+import { HouseInput } from "./globalTypes";
 
 // ====================================================
-// GraphQL query operation: HousesInRange
+// GraphQL mutation operation: updateHouse
 // ====================================================
 
-export interface HousesInRange_housesInRange {
+export interface updateHouse_updateHouse {
   __typename: "House";
   id: string;
+  image: string;
+  publicId: string;
   latitude: number;
   longitude: number;
-  address: string;
-  publicId: string;
   bedrooms: number;
+  address: string;
 }
 
-export interface HousesInRange {
-  housesInRange: HousesInRange_housesInRange[];
+export interface updateHouse {
+  updateHouse: updateHouse_updateHouse | null;
 }
 
-export interface HousesInRangeVariables {
-  bounds: BoundsInput;
+export interface updateHouseVariables {
+  id: string;
+  input: HouseInput;
 }
